@@ -2,7 +2,7 @@
 
 FROM ghcr.io/imagegenius/obico-darknet:latest as darknet
 # runtime
-FROM ghcr.io/imagegenius/baseimage-ubuntu:jammy
+FROM ghcr.io/imagegenius/baseimage-ubuntu:noble
 
 # set version label
 ARG BUILD_DATE
@@ -20,7 +20,7 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 RUN \
   echo "**** add python3.10 to apt ****" && \
-  echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy main" >>/etc/apt/sources.list.d/python.list && \
+  echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu noble main" >>/etc/apt/sources.list.d/python.list && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys f23c5a6cf475977595c89f51ba6932366a755776 && \
   echo "**** install runtime packages ****" && \
   apt-get update && \
@@ -50,13 +50,9 @@ RUN \
   git clone -b release https://github.com/TheSpaghettiDetective/obico-server.git /tmp/obico-server && \
   git -C /tmp/obico-server  checkout ${OBICO_VERSION} && \
   pip3 install \
-    blinker \
-    importlib-metadata==4.13.0 \
-    inotify-simple==1.3.5 \
     onnxruntime-gpu \
+    pipenv==2022.12.19 \
     opencv_python_headless \
-    six \
-    tornado==6.2.0 && \
   pip3 install -r /tmp/obico-server/ml_api/requirements.txt && \
   pip3 install -r /tmp/obico-server/backend/requirements.txt && \
   echo "**** install moonraker ****" && \
