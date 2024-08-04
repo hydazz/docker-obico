@@ -5,15 +5,12 @@ mkdir -p \
     /config/media \
     /run/obico
 
-if [ ! -f "/.setup" ]; then
-    echo "Initialising Obico"
-    cd /app/obico/backend
+echo "Initialising Obico"
+source /lsiopy/3.10/backend/bin/activate
+cd /app/obico/backend
 
-    python3.10 manage.py migrate
-    python3.10 manage.py collectstatic -v 2 --noinput
-
-    touch "/.setup"
-fi
+python3.10 manage.py migrate
+python3.10 manage.py collectstatic -v 2 --noinput
 
 # permissions
 chown -R abc:abc \

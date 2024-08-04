@@ -43,18 +43,23 @@ RUN \
     pip \
     setuptools \
     wheel && \
+  echo "**** prepare obico envs ****" && \
+  mkdir -p /lsiopy/3.10/ml_api /lsiopy/3.10/backend && \
+  pip3 install virtualenv && \
+  virtualenv /lsiopy/3.10/ml_api && \
+  virtualenv /lsiopy/3.10/backend && \
   echo "**** install obico ****" && \
   if [ -z ${OBICO_VERSION+x} ]; then \
     OBICO_VERSION=$(curl -sL "https://api.github.com/repos/TheSpaghettiDetective/obico-server/commits?ref=release" | jq -r '.[0].sha' | cut -c1-8); \
   fi && \
   git clone -b release https://github.com/TheSpaghettiDetective/obico-server.git /tmp/obico-server && \
-  git -C /tmp/obico-server  checkout ${OBICO_VERSION} && \
-  pip3 install \
+  git -C /tmp/obico-server checkout ${OBICO_VERSION} && \
+  /lsiopy/3.10/ml_api/bin/pip install \
     onnxruntime-gpu \
     pipenv==2022.12.19 \
-    opencv_python_headless \
-  pip3 install -r /tmp/obico-server/ml_api/requirements.txt && \
-  pip3 install -r /tmp/obico-server/backend/requirements.txt && \
+    opencv_python_headless && \
+  /lsiopy/3.10/ml_api/bin/pip install -r /tmp/obico-server/ml_api/requirements.txt && \
+  /lsiopy/3.10/backend/bin/pip install -r /tmp/obico-server/backend/requirements.txt && \
   echo "**** install moonraker ****" && \
   git clone https://github.com/Arksine/moonraker.git /app/moonraker && \
   git -C /app/moonraker checkout ${MOONRAKER_COMMIT} && \
@@ -97,7 +102,7 @@ RUN \
     /root/.cache
 
 # environment settings
-ENV PYTHONPATH="${PYTHONPATH}:/app/moonraker/moonraker"
+ENV PYTHONPATH="/app/moonraker/moonraker"
 
 # copy local files
 COPY root/ /

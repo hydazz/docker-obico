@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
 
+source /lsiopy/3.10/backend/bin/activate
+
 exec \
     cd /app/obico/backend s6-setuidgid abc \
         celery -A config worker --beat -l info -c 2 -Q realtime,celery
